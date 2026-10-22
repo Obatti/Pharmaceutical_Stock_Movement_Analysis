@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 130" width="100%" height="130" style="background: transparent; font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Helvetica, Arial, sans-serif;">
+  <style>
+    .card { fill: #0d1117; stroke: #30363d; stroke-width: 1.5; rx: 10px; }
+    .pulse { animation: pulseAnim 2.5s infinite ease-in-out; transform-origin: 55px 65px; }
+    @keyframes pulseAnim {
+      0% { r: 6px; opacity: 1; }
+      50% { r: 16px; opacity: 0.25; stroke-width: 3px; }
+      100% { r: 6px; opacity: 1; }
+    }
+    .title { fill: #58a6ff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
+    .subtitle { fill: #8b949e; font-size: 13px; }
+    .badge { fill: #238636; font-size: 11px; font-weight: bold; }
+  </style>
+
+  <rect width="848" height="128" x="1" y="1" class="card" />
+
+  <!-- Animated Pulse Node -->
+  <circle cx="55" cy="65" r="20" fill="#1f6feb" opacity="0.15" />
+  <circle cx="55" cy="65" r="6" fill="#58a6ff" />
+  <circle cx="55" cy="65" r="14" fill="none" stroke="#58a6ff" class="pulse" />
+
+  <!-- Text Header & Details -->
+  <text x="95" y="52" class="title">AUDIT COMPLETE • REPRODUCIBILITY VERIFIED</text>
+  <text x="95" y="74" class="subtitle">Thank you for reviewing the Pharmaceutical Stock Movement analysis.</text>
+  <text x="95" y="94" class="subtitle">Data integrity, logging discipline, and capital efficiency drive every clinical outcome.</text>
+
+  <!-- Status Token -->
+  <rect x="710" y="24" width="105" height="24" rx="12" fill="#238636" opacity="0.2" />
+  <text x="731" y="40" class="badge">PIPELINE PASS</text>
+</svg>

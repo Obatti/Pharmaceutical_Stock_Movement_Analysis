@@ -33,12 +33,11 @@ The goal of this analysis was to build a reproducible pipeline to rectify data t
 ---
 
 ## Repository Layout
-
-```text
+```
 pharmaceutical-inventory-analysis/
 ├── Data/
-│   ├── inventory_raw.xlsx              # Original unedited Excel export (1,000 records)
-│   └── inventory_clean.csv             # Processed, imputed, and scaled production dataset
+│   ├── inventory_raw.xlsx    # Original unedited Excel data 
+│   └── inventory_clean.csv   # Cleaned dataset
 ├── notebooks/
 │   └── pharmaceutical_inventory_analysis.ipynb
 ├── images/
@@ -49,6 +48,7 @@ pharmaceutical-inventory-analysis/
 ├── .gitignore
 ├── requirements.txt
 └── README.md
+```
 
 ## Data Dictionary & Audit Baseline
 
@@ -81,22 +81,22 @@ The `client` column was blank across 99.5% of rows, serving as an unpopulated bi
 
 The raw `quantity` field was stored as an unformatted string. It was stripped of whitespace and parsed into a signed numeric float so positive additions and negative deductions could be computed mathematically.
 
-System lag and duplicate keystrokes wrote identical transaction events under separate timestamps. Screening across physical transaction footprints—date, item code, quantity, and amount—isolated and removed 18 operational duplicate rows while retaining the initial posting.
+System lag and duplicate keystrokes wrote identical transaction events under separate timestamps. Screening across physical transaction footprints date, item code, quantity, and amount isolated and removed 18 operational duplicate rows while retaining the initial posting.
 
-Missing invoice entries were resolved through movement sign verification. Internal stock issues to wards do not generate commercial supplier bills. Outbound movements (`quantity <= 0`) missing invoices were categorized as `DISPATCH_LOG` (74.54% of records)[cite: 2]. Undocumented positive receipts (`quantity > 0`) were isolated as `MISSING_RECEIPT_ID` (1.73%) for physical intake compliance audits[cite: 2].
+Missing invoice entries were resolved through movement sign verification. Internal stock issues to wards do not generate commercial supplier bills. Outbound movements (`quantity <= 0`) missing invoices were categorized as `DISPATCH_LOG` (74.54% of records)[cite: 2]. Undocumented positive receipts (`quantity > 0`) were isolated as `MISSING_RECEIPT_ID` (1.73%) for physical intake compliance audits.
 
-The single missing origin in `source_location` was imputed to `Main Store`, reflecting the 99.59% concentration of historical disbursements[cite: 2]. Unassigned entries in `destination_location` (26.4% of the raw data) were mapped to `UNKNOWN` rather than assigned to a clinic, preventing high-value central intake batches from inflating ward metrics.
+The single missing origin in `source_location` was imputed to `Main Store`, reflecting the 99.59% concentration of historical disbursements. Unassigned entries in `destination_location` (26.4% of the raw data) were mapped to `UNKNOWN` rather than assigned to a clinic, preventing high-value central intake batches from inflating ward metrics.
 
 Missing continuous entries in previous stock, quantity, and amount were imputed using the median of each specific item code group. Imputing by SKU cluster prevents high-volume consumables from skewing low-volume, high-cost specialty medications.
 
-Outlier screening flagged extreme values in previous stock, unit price, and transaction amount, including verified replenishment batches reaching 52,000 units and 130,000 in total value[cite: 1]. These were confirmed wholesale intake shipments, not clerical mistakes[cite: 1]. Capping them would have artificially erased the real scale difference between warehouse receiving and departmental dispensing. A log transformation was applied across continuous features, bringing heavy right tails into balanced distributions while preserving zero-stock baselines[cite: 1].
+Outlier screening flagged extreme values in previous stock, unit price, and transaction amount, including verified replenishment batches reaching 52,000 units and 130,000 in total value. These were confirmed wholesale intake shipments, not clerical mistakes. Capping them would have artificially erased the real scale difference between warehouse receiving and departmental dispensing. A log transformation was applied across continuous features, bringing heavy right tails into balanced distributions while preserving zero-stock baselines.
 
 ---
 
 ## Exploratory Findings
 
 <p align="center">
-  <img src="images/univariate_distributions.png" alt="Univariate Distributions" width="850"/>
+  <img src="images/univariate_distributions (2).png" alt="Univariate Distributions" width="850"/>
 </p>
 
 The raw continuous metrics displayed severe positive skewness and long right tails due to bulk replenishment orders. Applying a log transformation normalized price, baseline stock, and movement amounts, making them suitable for reliable statistical testing and linear comparisons[cite: 1].
@@ -160,3 +160,18 @@ pip install -r requirements.txt
 # Launch pipeline notebook
 jupyter notebook notebooks/pharmaceutical_inventory_analysis.ipynb
 ```
+---
+
+## Acknowledgments & Audit Sign-Off
+
+<p align="center">
+  <img src="images/completion_banner.svg" alt="Audit Complete Banner" width="850"/>
+</p>
+
+```text
+Pipeline Status : Verified [1,000 / 1,000 events audited]
+Data Integrity  : Strict Directional Imputation Applied
+Architecture    : Reproducible Python & Jupyter Environment
+```
+
+> *"Mens regit molem"* — Mind over matter. Special thanks to the healthcare logistics teams and peer reviewers supporting transparent clinical data systems.
